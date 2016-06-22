@@ -20,6 +20,8 @@ include Sourcedeps
 
 $(OBJ): Makefile
 
+auto: clean xtitle install
+
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 

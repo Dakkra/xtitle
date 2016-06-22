@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 		switch (opt) {
 			case 'h':
 				printf("xtitle [-h|-v|-s|-e|-i|-f FORMAT|-t NUMBER] [WID ...]\n");
+				printf("%s\n", "Dakkra mod had some special features");
+				printf("%s\n", "Note that -e will replace & with a space");
 				return EXIT_SUCCESS;
 				break;
 			case 'v':
@@ -126,11 +128,46 @@ char* expand_escapes(const char *src)
 	char *dest = (char *)malloc(2 * strlen(src) + 1);
 	char *start = dest;
 	char c;
+	bool andSymbol = false;
+	int andCount = 0;
+
 	while ((c = *(src++))) {
 		if (c == '\'' || c == '\"' || c == '\\')
 			*(dest++) = '\\';
+
 		*(dest++) = c;
+
+		if (c == '&') {
+			andSymbol = true;
+			andCount++;
+		}
+
 	}
+
+	if (andSymbol) {
+		*dest = '\0';
+		start[strlen(start)] = '\0';
+		char *data = (char *) malloc(strlen(start + 1));
+		strncpy(data, start, strlen(start));
+		// printf(data);
+		printf("\n");
+		dest = (char *) malloc(strlen(data) + (6 * andCount) + 25);
+		free(start);
+		start = dest;
+
+		while ((c = *(data++))) {
+			if (c == '&') {
+				*(dest++) = '(';
+				*(dest++) = 'a';
+				*(dest++) = 'n';
+				*(dest++) = 'd';
+				*(dest++) = ')';
+			}
+			else
+				*(dest++) = c;
+		}
+	}
+
 	*dest = '\0';
 	return start;
 }
